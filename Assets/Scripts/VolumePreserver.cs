@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Linq;
 using Unity.VisualScripting;
 using UnityEngine;
 
@@ -11,9 +12,8 @@ public class VolumePreserver : MonoBehaviour
 
     [SerializeField]
     private float baseSpringStrength = 1f;
-    [SerializeField]
-    private float springDamping = 0.1f;
 
+    [SerializeField]
     private float restVolume;
 
     [SerializeField]
@@ -33,32 +33,43 @@ public class VolumePreserver : MonoBehaviour
         restVolume = CalculateVolume();
     }
 
-    private void Update()
+    private void FixedUpdate()
     {
         // Calculate the current area of the triangle
         float currentVolume = CalculateVolume();
         // Check the error between the current area and the rest area, you can use this to apply forces to the points to maintain the triangle's shape
         float volumeError = currentVolume - restVolume;
 
-        //Vector3 currentCrossProduct = Vector3.Cross(points[1].transform.position - points[0].transform.position, points[2].transform.position - points[0].transform.position);
+        
+            Vector3 x0 = points[0].transform.position;
+            Vector3 x1 = points[1].transform.position;
+            Vector3 x2 = points[2].transform.position;
+            Vector3 x3 = points[3].transform.position;
 
-        // Find the direction to push the points to maintain the triangle's shape
-        Vector3 p1 = Vector3.Cross(
-            (points[1].transform.position - points[3].transform.position),
-            (points[2].transform.position - points[3].transform.position)) / 6f;
-        Vector3 p2 = Vector3.Cross(
-            (points[2].transform.position - points[0].transform.position),
-            (points[3].transform.position - points[0].transform.position)) / 6f;
-        Vector3 p3 = Vector3.Cross(
-            (points[3].transform.position - points[0].transform.position),
-            (points[1].transform.position - points[0].transform.position)) / 6f;
-        Vector3 p4 = Vector3.Cross(
-            (points[1].transform.position - points[0].transform.position),
-            (points[2].transform.position - points[0].transform.position)) / 6f;
-        // Apply forces to the points based on the area error and the direction
-        points[0].ApplyForce(p1 * volumeError * volumeStiffness);
-        points[1].ApplyForce(p2 * volumeError * volumeStiffness);
-        points[2].ApplyForce(p3 * volumeError * volumeStiffness);
+            Vector3 grad0 =
+        -(
+            Vector3.Cross(x2 - x0, x3 - x0) +
+            Vector3.Cross(x3 - x0, x1 - x0) +
+            Vector3.Cross(x1 - x0, x2 - x0)
+         ) / 6f;
+
+            Vector3 grad1 =
+                Vector3.Cross(x2 - x0, x3 - x0) / 6f;
+
+            Vector3 grad2 =
+                Vector3.Cross(x3 - x0, x1 - x0) / 6f;
+
+            Vector3 grad3 =
+                Vector3.Cross(x1 - x0, x2 - x0) / 6f;
+
+            points[0].ApplyForce(-grad0 * volumeError * volumeStiffness);
+            points[1].ApplyForce(-grad1 * volumeError * volumeStiffness);
+            points[2].ApplyForce(-grad2 * volumeError * volumeStiffness);
+            points[3].ApplyForce(-grad3 * volumeError * volumeStiffness);
+
+            
+        
+        Debug.Log($"Tetrahedron with points {string.Join(' ', points.Select(x => x.gameObject.name))} - Current Area: {currentVolume}, Rest Area: {restVolume}, Area Error: {volumeError}");
 
         /*
         if(currentVolume < 0)
@@ -70,7 +81,7 @@ public class VolumePreserver : MonoBehaviour
             SetSpringStrength(baseSpringStrength);
         }*/
 
-        Debug.Log($"Current Area: {currentVolume}, Rest Area: {restVolume}, Area Error: {volumeError}");
+
     }
 
     private float CalculateVolume()
@@ -92,6 +103,7 @@ public class VolumePreserver : MonoBehaviour
         foreach (Spring spring in springs)
         {
             spring.currentSpringStrength = strength;
+            
         }
     }
 }

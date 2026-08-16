@@ -8,7 +8,7 @@ public class SoftPoint : MonoBehaviour
     {
         rb = GetComponent<Rigidbody>();
     }
-    public void ApplyForce(Vector2 force)
+    public void ApplyForce(Vector3 force)
     {
         rb.AddForce(force);
     }

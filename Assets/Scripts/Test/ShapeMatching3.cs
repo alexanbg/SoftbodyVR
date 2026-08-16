@@ -29,9 +29,13 @@ public class ShapeMatching3 : MonoBehaviour
             Spring currentSpring = currentPoints[i].gameObject.AddComponent<Spring>();
 
             currentSpring.attachedPoint = targetPoints[i].GetComponent<SoftPoint>();
-            currentSpring.isOneWaySpring = true;
+            currentSpring.isOneWaySpring = false;
             currentSpring.currentSpringStrength = springStrength;
             currentSpring.damping = damping;
+            currentSpring.setLengthToZero = true;
+
+            //currentPoints[i].GetComponent<Rigidbody>().mass = damping;
+
         }
     }
 
