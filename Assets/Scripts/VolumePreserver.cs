@@ -12,6 +12,8 @@ public class VolumePreserver : MonoBehaviour
 
     [SerializeField]
     private float baseSpringStrength = 1f;
+    [SerializeField]
+    private float baseSpringDamping = 1f;
 
     [SerializeField]
     private float restVolume;
@@ -27,7 +29,7 @@ public class VolumePreserver : MonoBehaviour
         //Get all springs in this object
         springs = new List<Spring>(GetComponentsInChildren<Spring>());
 
-        SetSpringStrength(baseSpringStrength);
+        SetSpring(baseSpringStrength, baseSpringDamping);
 
         //Store the initial area of the triangle
         restVolume = CalculateVolume();
@@ -71,15 +73,7 @@ public class VolumePreserver : MonoBehaviour
         
         Debug.Log($"Tetrahedron with points {string.Join(' ', points.Select(x => x.gameObject.name))} - Current Area: {currentVolume}, Rest Area: {restVolume}, Area Error: {volumeError}");
 
-        /*
-        if(currentVolume < 0)
-        {
-            SetSpringStrength(0);
-        }
-        else
-        {
-            SetSpringStrength(baseSpringStrength);
-        }*/
+        
 
 
     }
@@ -98,12 +92,13 @@ public class VolumePreserver : MonoBehaviour
         return Vector3.Dot(u, Vector3.Cross(v, w)) / 6f;
     }
 
-    private void SetSpringStrength(float strength)
+    private void SetSpring(float strength, float damping)
     {
         foreach (Spring spring in springs)
         {
             spring.currentSpringStrength = strength;
-            
+            spring.damping = damping;
+
         }
     }
 }

@@ -10,7 +10,7 @@ public class Spring : MonoBehaviour
     
     public float currentSpringStrength = 10f;
 
-
+    [SerializeField]
     private float restLength = 1f;
     
     public float damping = 0.1f;
@@ -42,13 +42,66 @@ public class Spring : MonoBehaviour
         line.startWidth = 0.1f;
         */
     }
+
+    private void FixedUpdate()
+    {
+        if (attachedPoint == null)
+            return;
+
+        Vector3 direction =
+            attachedPoint.transform.position -
+            transform.position;
+
+        float distance = direction.magnitude;
+
+        if (distance < 1e-6f)
+            return;
+
+        Vector3 directionNormalized =
+            direction / distance;
+
+        // Hooke's law
+        float springMagnitude =
+            (distance - restLength) *
+            currentSpringStrength;
+
+        // Relative velocity
+        Vector3 relativeVelocity =
+            rb.linearVelocity -
+            rbAttached.linearVelocity;
+
+        float velocityAlongSpring =
+            Vector3.Dot(
+                relativeVelocity,
+                directionNormalized);
+
+        // Damping
+        float dampingMagnitude =
+            -damping *
+            velocityAlongSpring;
+
+        // Total force on current point
+        Vector3 force =
+            directionNormalized *
+            (springMagnitude + dampingMagnitude);
+
+        rb.AddForce(force);
+
+        if (!isOneWaySpring)
+        {
+            rbAttached.AddForce(-force);
+        }
+    }
+
+    /*
+     * OLD CODE, NOT USED ANYMORE, BUT KEPT FOR REFERENCE
     private void Update()
     {
         if (attachedPoint != null)
         {
             // Calculte the length the point must move
             Vector3 direction = attachedPoint.transform.position - transform.position;
-            float distance = direction.magnitude;
+            float distance = Vector3.Distance(transform.position, attachedPoint.transform.position);
 
             // Calculate the spring force
             float springForce = (restLength - distance) * currentSpringStrength;
@@ -68,7 +121,7 @@ public class Spring : MonoBehaviour
             if (!isOneWaySpring)
                 rbAttached.AddForce(direction.normalized * totalForce);
         }
-    }
+    }*/
 
     public void SetSpringLength(float length)
     {
