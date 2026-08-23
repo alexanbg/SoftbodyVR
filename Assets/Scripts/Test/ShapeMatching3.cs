@@ -23,9 +23,14 @@ public class ShapeMatching3 : MonoBehaviour
         restOffset = new Vector3[currentPoints.Length];
         for (int i = 0; i < currentPoints.Length; i++)
         {
-            restOffset[i] = currentPoints[i].position - transform.position;
+            //set the rest offset of each point relative to the center of mass of the object
+            Vector3 startCenterOfMass = ComputeCenterOfMass(currentPoints);
+            restOffset[i] = currentPoints[i].position - startCenterOfMass;
+
+            //set the target points to the current points
             targetPoints[i].position = currentPoints[i].position;
 
+            //add a spring component to each current point and attach it to the corresponding target point
             Spring currentSpring = currentPoints[i].gameObject.AddComponent<Spring>();
 
             currentSpring.attachedPoint = targetPoints[i].GetComponent<SoftPoint>();
@@ -41,11 +46,14 @@ public class ShapeMatching3 : MonoBehaviour
 
 
     // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
+        // Compute the center of mass of the current points
         Matrix3x3 A = Matrix3x3.Zero;
         curretCenterOfMass = ComputeCenterOfMass(currentPoints);
 
+
+        // Compute the covariance matrix A
         for (int i = 0; i < currentPoints.Length; i++)
         {
             Vector3 p = currentPoints[i].position - curretCenterOfMass;
@@ -54,10 +62,12 @@ public class ShapeMatching3 : MonoBehaviour
             A += Matrix3x3.OuterProduct(p, q);
         }
 
+        // Perform polar decomposition to extract the rotation matrix R
         Matrix3x3 R = PolarDecomposition(A);
         
         Quaternion rotation = MatrixToQuaternion(R);
 
+        // Update the target points based on the computed rotation and rest offsets
         for (int i = 0; i < currentPoints.Length; i++)
         {
             Vector3 goal =
@@ -86,6 +96,7 @@ public class ShapeMatching3 : MonoBehaviour
 
         for (int i = 0; i < iterations; i++)
         {
+            
             Matrix3x3 invT = R.Inverse().Transpose();
 
             R = (R + invT) * 0.5f;

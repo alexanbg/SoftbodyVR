@@ -35,19 +35,15 @@ public class Spring : MonoBehaviour
         {
             restLength = 0f;
         }
-        /*
-        LineRenderer line = this.AddComponent<LineRenderer>();
-        line.SetPosition(0, transform.position);
-        line.SetPosition(1, attachedPoint.transform.position);
-        line.startWidth = 0.1f;
-        */
     }
 
     private void FixedUpdate()
     {
+        // If there is no attached point, do nothing
         if (attachedPoint == null)
             return;
 
+        // Calculate the direction and distance between the two points
         Vector3 direction =
             attachedPoint.transform.position -
             transform.position;
@@ -57,30 +53,32 @@ public class Spring : MonoBehaviour
         if (distance < 1e-6f)
             return;
 
+        
         Vector3 directionNormalized =
             direction / distance;
 
-        // Hooke's law
+        // Calculate the spring force based on Hooke's law
         float springMagnitude =
             (distance - restLength) *
             currentSpringStrength;
 
-        // Relative velocity
+        // Calculate the relative velocity between the two points
         Vector3 relativeVelocity =
             rb.linearVelocity -
             rbAttached.linearVelocity;
 
+        // Calculate the velocity along the spring direction
         float velocityAlongSpring =
             Vector3.Dot(
                 relativeVelocity,
                 directionNormalized);
 
-        // Damping
+        // Calculate the damping force based on the relative velocity
         float dampingMagnitude =
             -damping *
             velocityAlongSpring;
 
-        // Total force on current point
+        // Calculate the total force to be applied to the current point
         Vector3 force =
             directionNormalized *
             (springMagnitude + dampingMagnitude);

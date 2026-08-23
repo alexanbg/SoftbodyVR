@@ -25,57 +25,47 @@ public class VolumePreserver : MonoBehaviour
 
     private void Start()
     {
-
-        //Get all springs in this object
+        // Get all the springs in the children of this object   
         springs = new List<Spring>(GetComponentsInChildren<Spring>());
-
+        // Set the spring strength and damping for all springs
         SetSpring(baseSpringStrength, baseSpringDamping);
-
-        //Store the initial area of the triangle
+        // Calculate the rest area of the triangle formed by the three points
         restVolume = CalculateVolume();
     }
 
     private void FixedUpdate()
     {
-        // Calculate the current area of the triangle
+        // Calculate the current area of the triangle formed by the three points
         float currentVolume = CalculateVolume();
-        // Check the error between the current area and the rest area, you can use this to apply forces to the points to maintain the triangle's shape
+        // Calculate the difference between the current area and the rest area
         float volumeError = currentVolume - restVolume;
 
-        
-            Vector3 x0 = points[0].transform.position;
-            Vector3 x1 = points[1].transform.position;
-            Vector3 x2 = points[2].transform.position;
-            Vector3 x3 = points[3].transform.position;
-
-            Vector3 grad0 =
+        // Calculate the gradient of the volume with respect to the positions of the points
+        Vector3 x0 = points[0].transform.position;
+        Vector3 x1 = points[1].transform.position;
+        Vector3 x2 = points[2].transform.position;
+        Vector3 x3 = points[3].transform.position;
+        Vector3 grad0 =
         -(
             Vector3.Cross(x2 - x0, x3 - x0) +
             Vector3.Cross(x3 - x0, x1 - x0) +
             Vector3.Cross(x1 - x0, x2 - x0)
          ) / 6f;
 
-            Vector3 grad1 =
-                Vector3.Cross(x2 - x0, x3 - x0) / 6f;
+        Vector3 grad1 =
+            Vector3.Cross(x2 - x0, x3 - x0) / 6f;
 
-            Vector3 grad2 =
-                Vector3.Cross(x3 - x0, x1 - x0) / 6f;
+        Vector3 grad2 =
+            Vector3.Cross(x3 - x0, x1 - x0) / 6f;
 
-            Vector3 grad3 =
-                Vector3.Cross(x1 - x0, x2 - x0) / 6f;
+        Vector3 grad3 =
+            Vector3.Cross(x1 - x0, x2 - x0) / 6f;
 
-            points[0].ApplyForce(-grad0 * volumeError * volumeStiffness);
-            points[1].ApplyForce(-grad1 * volumeError * volumeStiffness);
-            points[2].ApplyForce(-grad2 * volumeError * volumeStiffness);
-            points[3].ApplyForce(-grad3 * volumeError * volumeStiffness);
-
-            
-        
-        Debug.Log($"Tetrahedron with points {string.Join(' ', points.Select(x => x.gameObject.name))} - Current Area: {currentVolume}, Rest Area: {restVolume}, Area Error: {volumeError}");
-
-        
-
-
+        // Apply forces to the points based on the volume error and the gradients
+        points[0].ApplyForce(-grad0 * volumeError * volumeStiffness);
+        points[1].ApplyForce(-grad1 * volumeError * volumeStiffness);
+        points[2].ApplyForce(-grad2 * volumeError * volumeStiffness);
+        points[3].ApplyForce(-grad3 * volumeError * volumeStiffness);
     }
 
     private float CalculateVolume()
@@ -98,7 +88,6 @@ public class VolumePreserver : MonoBehaviour
         {
             spring.currentSpringStrength = strength;
             spring.damping = damping;
-
         }
     }
 }
