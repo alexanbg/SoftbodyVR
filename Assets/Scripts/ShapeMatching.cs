@@ -1,7 +1,7 @@
 using UnityEngine;
 using static UnityEngine.ParticleSystem;
 
-public class ShapeMatching3 : MonoBehaviour
+public class ShapeMatching : MonoBehaviour
 {
     [SerializeField]
     private Transform[] currentPoints;
@@ -21,10 +21,11 @@ public class ShapeMatching3 : MonoBehaviour
     void Start()
     {
         restOffset = new Vector3[currentPoints.Length];
+        //set the rest offset of each point relative to the center of mass of the object
+        Vector3 startCenterOfMass = ComputeCenterOfMass(currentPoints);
+
         for (int i = 0; i < currentPoints.Length; i++)
         {
-            //set the rest offset of each point relative to the center of mass of the object
-            Vector3 startCenterOfMass = ComputeCenterOfMass(currentPoints);
             restOffset[i] = currentPoints[i].position - startCenterOfMass;
 
             //set the target points to the current points

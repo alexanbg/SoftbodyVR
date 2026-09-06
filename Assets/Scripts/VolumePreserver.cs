@@ -45,21 +45,10 @@ public class VolumePreserver : MonoBehaviour
         Vector3 x1 = points[1].transform.position;
         Vector3 x2 = points[2].transform.position;
         Vector3 x3 = points[3].transform.position;
-        Vector3 grad0 =
-        -(
-            Vector3.Cross(x2 - x0, x3 - x0) +
-            Vector3.Cross(x3 - x0, x1 - x0) +
-            Vector3.Cross(x1 - x0, x2 - x0)
-         ) / 6f;
-
-        Vector3 grad1 =
-            Vector3.Cross(x2 - x0, x3 - x0) / 6f;
-
-        Vector3 grad2 =
-            Vector3.Cross(x3 - x0, x1 - x0) / 6f;
-
-        Vector3 grad3 =
-            Vector3.Cross(x1 - x0, x2 - x0) / 6f;
+        Vector3 grad0 = Vector3.Cross(x3 - x1, x2 - x1) / 6f;
+        Vector3 grad1 = Vector3.Cross(x2 - x0, x3 - x0) / 6f;
+        Vector3 grad2 = Vector3.Cross(x3 - x0, x1 - x0) / 6f;
+        Vector3 grad3 = Vector3.Cross(x1 - x0, x2 - x0) / 6f;
 
         // Apply forces to the points based on the volume error and the gradients
         points[0].ApplyForce(-grad0 * volumeError * volumeStiffness);
