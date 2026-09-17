@@ -91,35 +91,6 @@ public class Spring : MonoBehaviour
         }
     }
 
-    /*
-     * OLD CODE, NOT USED ANYMORE, BUT KEPT FOR REFERENCE
-    private void Update()
-    {
-        if (attachedPoint != null)
-        {
-            // Calculte the length the point must move
-            Vector3 direction = attachedPoint.transform.position - transform.position;
-            float distance = Vector3.Distance(transform.position, attachedPoint.transform.position);
-
-            // Calculate the spring force
-            float springForce = (restLength - distance) * currentSpringStrength;
-
-            // Get the difference between the velocity of the two points and its dot value
-            Vector3 relativeVelocity = rb.linearVelocity - rbAttached.linearVelocity;
-            float dotRelativeVelocity = Vector3.Dot(relativeVelocity, direction.normalized);
-
-            // Calculate the damping force
-            float dampingForce = dotRelativeVelocity * damping;
-
-            // Get the total force, clamp it and apply it to both points
-            float totalForce = springForce + dampingForce;
-
-            rb.AddForce(direction.normalized * -totalForce);
-
-            if (!isOneWaySpring)
-                rbAttached.AddForce(direction.normalized * totalForce);
-        }
-    }*/
 
     public void SetSpringLength(float length)
     {

@@ -220,7 +220,7 @@ GameObject:
   - component: {fileID: 1477521592299805528}
   - component: {fileID: 2027812580944880288}
   m_Layer: 0
-  m_Name: Tetrahedron working
+  m_Name: Tetrahedron
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

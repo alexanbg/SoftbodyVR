@@ -23,6 +23,8 @@ public class VolumePreserver : MonoBehaviour
 
     private List<Spring> springs = new List<Spring>();
 
+    private float maxVolumeError = 0;
+
     private void Start()
     {
         // Get all the springs in the children of this object   
@@ -39,6 +41,8 @@ public class VolumePreserver : MonoBehaviour
         float currentVolume = CalculateVolume();
         // Calculate the difference between the current area and the rest area
         float volumeError = currentVolume - restVolume;
+
+        maxVolumeError = Mathf.Max(maxVolumeError, Mathf.Abs(volumeError));
 
         // Calculate the gradient of the volume with respect to the positions of the points
         Vector3 x0 = points[0].transform.position;
@@ -57,7 +61,7 @@ public class VolumePreserver : MonoBehaviour
         points[3].ApplyForce(-grad3 * volumeError * volumeStiffness);
     }
 
-    private float CalculateVolume()
+    public float CalculateVolume()
     {
         Vector3 p1 = points[0].transform.position;
         Vector3 p2 = points[1].transform.position;
@@ -78,5 +82,10 @@ public class VolumePreserver : MonoBehaviour
             spring.currentSpringStrength = strength;
             spring.damping = damping;
         }
+    }
+
+    private void OnDisable()
+    {
+        Debug.Log($"Maximum Volume Error of {transform.name}: {maxVolumeError}");
     }
 }

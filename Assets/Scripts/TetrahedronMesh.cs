@@ -21,9 +21,6 @@ public class TetrahedronMesh : MonoBehaviour
         mesh = new Mesh();
         GetComponent<MeshFilter>().mesh = mesh;
         CreateMesh();
-
-        
-        //Set the parameters
         
     }
     void Update()

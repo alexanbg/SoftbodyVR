@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 3703033712417630477}
   - component: {fileID: 3620323328749638577}
   - component: {fileID: 5538237080523911655}
+  - component: {fileID: 2215836634497685718}
   m_Layer: 0
   m_Name: Area Constraint Cube With Joints
   m_TagString: Untagged
@@ -112,6 +113,31 @@ MonoBehaviour:
   - {fileID: 3107616256231576908}
   - {fileID: 5675638970544579866}
   - {fileID: 4859917409067932876}
+--- !u!114 &2215836634497685718
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 96527786241029063}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d893654ebe800b04a92f1ad35d6e7ed2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  tetrahedrons:
+  - {fileID: 760913151336504346}
+  - {fileID: 8821598393288682358}
+  - {fileID: 2656109685298436140}
+  - {fileID: 147189733906098800}
+  restVolume: 0
+  currentVolume: 0
+  maxVolumeError: 0
+  maxVolumeErrorPercentage: 0
+  restorationTolerance: 0.05
+  currentRestorationTime: 0
+  maxRestorationTime: 0
+  averageRestorationTime: 0
 --- !u!1 &287163581573715223
 GameObject:
   m_ObjectHideFlags: 0

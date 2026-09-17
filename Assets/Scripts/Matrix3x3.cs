@@ -6,15 +6,6 @@ public struct Matrix3x3
     public float m10, m11, m12;
     public float m20, m21, m22;
 
-    public Vector3 Column0 => new Vector3(m00, m10, m20);
-    public Vector3 Column1 => new Vector3(m01, m11, m21);
-    public Vector3 Column2 => new Vector3(m02, m12, m22);
-
-    public Vector3 Row0 => new Vector3(m00, m01, m02);
-    public Vector3 Row1 => new Vector3(m10, m11, m12);
-    public Vector3 Row2 => new Vector3(m20, m21, m22);
-
-
     public Matrix3x3(
         float m00, float m01, float m02,
         float m10, float m11, float m12,

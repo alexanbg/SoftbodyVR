@@ -13,6 +13,7 @@ public class CubeMesh : MonoBehaviour
 
     void Start()
     {
+        // Initialize the mesh and vertices array
         mesh = new Mesh();
         vertices = new Vector3[points.Count];
         GetComponent<MeshFilter>().mesh = mesh;
@@ -24,7 +25,7 @@ public class CubeMesh : MonoBehaviour
     }
     private void CreateMesh()
     {
-        
+        // Convert the positions of the SoftPoints to local space and store them in the vertices array
 
         triangles = new int[]
         {
@@ -53,10 +54,13 @@ public class CubeMesh : MonoBehaviour
 
     private void UpdateMesh()
     {
+        // Update the vertices array with the current positions of the SoftPoints
         for (int i = 0; i < vertices.Length; i++)
         {
             vertices[i] = points[i].transform.position - transform.position;
         }
+
+        // Update the mesh with the new vertices and triangles
         mesh.Clear();
         mesh.vertices = vertices;
         mesh.triangles = triangles;
